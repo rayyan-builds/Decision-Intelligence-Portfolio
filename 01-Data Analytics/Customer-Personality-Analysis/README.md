@@ -1,10 +1,10 @@
 # Customer Personality Analysis Using Machine Learning
 
-A predictive customer analytics project that uses machine learning to understand customer spending behavior and predict responses to marketing campaigns.
+A predictive customer analytics project using machine learning to understand customer spending behavior and predict responses to marketing campaigns.
 
 ## Project Overview
 
-This project applies an end-to-end machine learning workflow to the **Customer Personality Analysis** dataset, containing 2,240 customer records with demographic, purchasing, web activity, and marketing campaign information.
+This project applies an end-to-end machine learning workflow to the **Customer Personality Analysis** dataset, containing **2,240 customer records** with demographic, purchasing, web activity, and marketing campaign information.
 
 The analysis focuses on two business problems:
 
@@ -112,7 +112,7 @@ The analysis also highlights the business cost of **false negatives**, where pot
 |---|---|
 | `Dataset.xlsx` | Customer Personality Analysis dataset containing demographic, purchasing, engagement, and campaign-response information. |
 | `Python_File.ipynb` | Main analysis notebook containing data preparation, exploratory analysis, feature engineering, machine learning models, evaluation, and visualizations. |
-| `ML_Project Report(1).pdf` | Detailed project report documenting the dataset, methodology, model comparisons, results, business insights, limitations, and conclusions. |
+| `project_report.pdf` | Detailed project report documenting the dataset, methodology, model comparisons, results, business insights, limitations, and conclusions. |
 
 ## Tools & Technologies
 
