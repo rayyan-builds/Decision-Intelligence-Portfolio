@@ -1,58 +1,63 @@
-# Retail Sales ETL & SQL Analytics
+# 🛒 Retail Sales ETL & Database Analytics
 
-> A SQL-driven ETL pipeline for transforming raw retail sales data into a clean, structured dataset ready for analysis and business reporting.
+> **Turning raw retail transaction data into a structured SQL analytics system for revenue, customer, product, sales-trend, and profitability analysis.**
 
-**SQL** · **Data Cleaning** · **ETL** · **Data Transformation** · **Retail Analytics** · **Data Analysis**
-
----
-
-## Business Problem
-
-Raw retail transaction data is often inconsistent, unstructured, and difficult to use directly for analysis.
-
-Before businesses can answer questions about sales performance, customers, products, and revenue, raw data needs to be cleaned, transformed, validated, and structured into an analysis-ready format.
-
-This project demonstrates how **SQL can be used to build an end-to-end ETL workflow**, transforming raw retail sales data into a reliable dataset suitable for downstream analytics and decision-making.
+**Database Systems for Business**  
+*MySQL · SQL · Python · Pandas · ETL · Relational Database Design · Business Analytics*
 
 ---
 
-## What I Built
+## 📌 Project Overview
 
-A SQL-based ETL workflow covering the core stages of data preparation:
+This project develops an end-to-end **ETL and relational database analytics pipeline** using a modified Superstore retail dataset containing **5,000 transaction records**.
 
-**Raw Data → Extract → Transform → Clean → Validate → Analysis-Ready Data**
+The objective was to transform a flat, difficult-to-analyze dataset into a structured **3NF relational database**, then use SQL to answer practical business questions around revenue, customers, sales trends, products, and profitability.
 
-The project focuses on using SQL to:
+The project combines **Python/Pandas for data preparation and ETL** with **MySQL/SQL for database design, data migration, validation, and business intelligence analysis**.
 
-- Inspect and understand raw retail data
-- Identify data quality issues
-- Clean inconsistent records
-- Handle missing and invalid values
-- Transform raw fields into useful analytical attributes
-- Standardize data formats
-- Create derived metrics
-- Validate the transformed data
-- Prepare the final dataset for business analysis
+The final pipeline demonstrates how raw transactional data can be converted into a reliable analytical foundation for business decision-making.
 
 ---
 
-## ETL Workflow
+## 🎯 Business Objective
+
+The project was designed to answer five core business questions:
+
+1. **How much revenue was generated in 2014?**
+2. **Which customers generated the highest purchase volumes?**
+3. **How do sales vary across months?**
+4. **Which products have the highest quantities sold?**
+5. **Which product categories generate the most profit?**
+
+These questions provide a practical view of **revenue performance, customer value, demand patterns, product performance, and profitability**.
+
+---
+
+## 🔄 ETL & Database Pipeline
 
 ```text
-Raw Retail Sales Data
-        ↓
-Data Extraction
-        ↓
-Data Quality Assessment
-        ↓
-Data Cleaning
-        ↓
-Data Transformation
-        ↓
-Derived Fields & Metrics
-        ↓
-Data Validation
-        ↓
-Clean Analytical Dataset
-        ↓
-Business Analysis
+Raw Superstore Dataset
+        │
+        ▼
+Python / Pandas
+Data Cleaning & Preparation
+        │
+        ▼
+MySQL Staging Layer
+        │
+        ▼
+Data Transformation & Validation
+        │
+        ▼
+Normalized 3NF Database
+        │
+        ├── Customers
+        ├── Products
+        ├── Orders
+        └── Order_Details
+        │
+        ▼
+SQL Business Queries
+        │
+        ▼
+Business Insights & HTML Outputs
