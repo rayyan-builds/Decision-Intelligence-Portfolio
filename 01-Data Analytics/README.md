@@ -1,25 +1,4 @@
-<svg width="1000" height="160" viewBox="0 0 1000 160" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#0F2027"/>
-      <stop offset="50%" stop-color="#203A43"/>
-      <stop offset="100%" stop-color="#2C5364"/>
-    </linearGradient>
-  </defs>
-
-  <rect width="1000" height="160" fill="url(#bg)"/>
-
-  <path d="M0,120 C150,150 250,90 400,110 C550,130 650,80 800,100 C900,113 950,105 1000,110 L1000,160 L0,160 Z"
-        fill="#ffffff" opacity="0.06"/>
-  <path d="M0,135 C150,160 250,110 400,125 C550,140 650,100 800,115 C900,124 950,118 1000,122 L1000,160 L0,160 Z"
-        fill="#ffffff" opacity="0.08"/>
-
-  <text x="500" y="72" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="38" font-weight="700"
-        fill="#ffffff" text-anchor="middle">📊 Data Analytics</text>
-
-  <text x="500" y="106" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="16"
-        fill="#d9e2e8" text-anchor="middle">Business Analytics — Python, Pandas &amp; Data Analysis</text>
-</svg>
+![Data Analytics](https://capsule-render.vercel.app/api?type=waving&color=0:0F2027,50:203A43,100:2C5364&height=160&section=header&text=Data+Analytics&fontSize=38&fontColor=ffffff&animation=fadeIn&fontAlignY=40&desc=Business+Analytics+-+Python%2C+Pandas+%26+Data+Analysis&descAlignY=62&descSize=16)
 
 This folder contains data analytics projects focused on transforming raw datasets into meaningful business insights through **data cleaning, exploratory analysis, statistical analysis, visualization, and analytical modeling**.
 
