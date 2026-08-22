@@ -1,49 +1,72 @@
-# Customer Personality Analysis Using Machine Learning
+# Customer Personality Analysis
 
-A predictive customer analytics project using machine learning to understand customer spending behavior and predict responses to marketing campaigns.
+> Predictive customer analytics using machine learning to understand spending behaviour and marketing campaign response.
 
-## Project Overview
+**Python** · **Scikit-learn** · **Pandas** · **Machine Learning** · **Customer Analytics** · **Marketing Analytics**
 
-This project applies an end-to-end machine learning workflow to the **Customer Personality Analysis** dataset, containing **2,240 customer records** with demographic, purchasing, web activity, and marketing campaign information.
+---
 
-The analysis focuses on two business problems:
+## Business Problem
 
-- Predicting **customer total spending**
-- Predicting whether a customer will **respond positively to a marketing campaign**
+Businesses collect large amounts of customer demographic, purchasing, web activity, and campaign data, but raw customer data alone does not explain which customers are likely to spend more or respond to marketing campaigns.
 
-The project demonstrates how predictive analytics can support **customer segmentation, targeted marketing, customer retention, and data-driven decision-making**.
+This project applies machine learning to address two business problems:
 
-## Key Objectives
+1. **How accurately can customer spending behaviour be predicted?**
+2. **Can customers likely to respond positively to a marketing campaign be identified?**
 
-- Predict `Total_Spending` using customer characteristics and purchasing behavior.
-- Predict customer response to marketing campaigns.
-- Compare multiple machine learning algorithms.
-- Identify important patterns in customer demographics, income, purchasing activity, and engagement.
-- Translate machine learning results into practical business insights.
+The objective was not only to compare machine learning models, but to translate their results into insights relevant to customer segmentation, targeted marketing, and business decision-making.
 
-## Methodology
+---
 
-The project follows a complete predictive analytics workflow:
+## Key Results
 
-1. Exploratory Data Analysis
-2. Data quality assessment
-3. Missing-value treatment
-4. Duplicate checking
-5. Categorical variable encoding
-6. Feature engineering
-7. Feature selection
-8. Feature scaling using `StandardScaler`
-9. 80/20 train-test split
-10. Regression model training and comparison
-11. Classification model training and comparison
-12. Model evaluation
-13. Business interpretation
+| Area | Result |
+|---|---|
+| Dataset | **2,240 customer records** |
+| Regression Task | Predict customer total spending |
+| Best Regression Model | **Random Forest Regressor** |
+| Best Regression R² | **0.8795** |
+| Weakest Regression R² | **0.1120 — SVR** |
+| Classification Task | Predict positive campaign response |
+| Best Classification Model | **Random Forest Classifier** |
 
-Target leakage was addressed by removing spending-related variables used to create `Total_Spending` from the regression features.
+The Random Forest Regressor substantially outperformed the other regression approaches, capturing complex non-linear relationships in customer spending behaviour.
 
-## Machine Learning Models
+For classification, Random Forest produced the strongest overall balance across the evaluated metrics. Because the campaign-response data was imbalanced, F1 Score was considered alongside accuracy, precision, and recall rather than relying on accuracy alone.
+
+---
+
+## What I Built
+
+An end-to-end customer analytics workflow covering:
+
+**Data → EDA → Preprocessing → Feature Engineering → Model Training → Model Comparison → Business Insights**
+
+The project included:
+
+- Exploratory Data Analysis
+- Data quality assessment
+- Missing-value treatment
+- Duplicate checking
+- Categorical variable encoding
+- Feature engineering
+- Feature selection
+- Feature scaling
+- Regression modelling
+- Classification modelling
+- Model evaluation
+- Business interpretation
+
+Target leakage was also considered when preparing the regression features.
+
+---
+
+## Machine Learning Approach
 
 ### Regression
+
+Five regression models were developed and compared:
 
 - Linear Regression
 - Support Vector Regression (SVR)
@@ -51,87 +74,96 @@ Target leakage was addressed by removing spending-related variables used to crea
 - Random Forest Regressor
 - K-Nearest Neighbors (KNN) Regressor
 
+**Evaluation metrics:**
+
+`MAE` · `MSE` · `RMSE` · `R²`
+
 ### Classification
+
+Five classification models were evaluated:
 
 - Logistic Regression
 - KNN Classifier
 - Decision Tree Classifier
 - Random Forest Classifier
-- Support Vector Machine (SVM) Classifier
+- Support Vector Machine (SVM)
 
-### Evaluation Metrics
+**Evaluation metrics:**
 
-**Regression**
-
-- MAE
-- MSE
-- RMSE
-- R² Score
-
-**Classification**
-
-- Accuracy
-- Precision
-- Recall
-- F1 Score
-
-## Key Results
-
-The **Random Forest Regressor** was the strongest regression model, achieving an **R² Score of approximately 0.8795**.
-
-For classification, the **Random Forest Classifier** achieved the strongest overall performance among the tested models. Due to the imbalance between positive and negative campaign responses, **F1 Score** was considered particularly important alongside other classification metrics.
-
-## Business Insights
-
-The analysis identified meaningful relationships between:
-
-- Customer income
-- Purchasing activity
-- Recency
-- Customer engagement
-- Total spending
-- Marketing campaign responses
-
-Higher-income customers generally demonstrated higher spending behavior, while purchasing and engagement patterns also provided useful signals for customer analysis.
-
-The results can support:
-
-- **Customer segmentation**
-- **Personalized marketing**
-- **Campaign targeting**
-- **Customer retention**
-- **Revenue forecasting**
-- **Identification of high-value customers**
-- **Data-driven marketing decisions**
-
-The analysis also highlights the business cost of **false negatives**, where potentially responsive customers may be incorrectly classified as non-responders.
-
-## Project Files
-
-| File | Description |
-|---|---|
-| `Dataset.xlsx` | Customer Personality Analysis dataset containing demographic, purchasing, engagement, and campaign-response information. |
-| `Python_File.ipynb` | Main analysis notebook containing data preparation, exploratory analysis, feature engineering, machine learning models, evaluation, and visualizations. |
-| `project_report.pdf` | Detailed project report documenting the dataset, methodology, model comparisons, results, business insights, limitations, and conclusions. |
-
-## Tools & Technologies
-
-`Python` · `Pandas` · `NumPy` · `Scikit-learn` · `Matplotlib` · `Seaborn` · `Jupyter Notebook` · `Excel`
-
-## Business Application
-
-The project demonstrates how predictive analytics can move beyond descriptive analysis toward **data-driven customer and marketing decisions**.
-
-The resulting models provide a foundation for identifying high-value customers, prioritizing marketing campaigns, improving customer targeting, and supporting customer relationship management.
-
-## Limitations
-
-- The classification dataset contains a significant class imbalance.
-- Advanced hyperparameter optimization was not performed.
-- The dataset represents a specific customer context and may not generalize directly to every industry or business environment.
+`Accuracy` · `Precision` · `Recall` · `F1 Score`
 
 ---
 
-## Skills Demonstrated
+## Why Random Forest Performed Best
 
-**Data Analytics | Exploratory Data Analysis | Feature Engineering | Data Preprocessing | Predictive Analytics | Regression | Classification | Model Evaluation | Customer Analytics | Marketing Analytics | Business Decision Support**
+The Random Forest Regressor achieved an **R² of 0.8795**, substantially outperforming SVR at **0.1120**.
+
+This indicates that the ensemble approach was better able to capture the non-linear relationships between customer characteristics, purchasing behaviour, and spending.
+
+For classification, Random Forest achieved the strongest overall performance, while the Decision Tree model showed stronger recall in identifying positive campaign responders. This illustrates an important business trade-off: the "best" model can depend on whether a company prioritizes overall predictive balance or identifying as many potential responders as possible.
+
+---
+
+## Business Insights
+
+The analysis identified relationships between:
+
+- Customer income
+- Purchasing activity
+- Customer engagement
+- Recency
+- Spending behaviour
+- Marketing campaign response
+
+One notable finding was that higher-income customers tended to demonstrate higher spending behaviour.
+
+The analysis also showed that purchasing activity and customer engagement patterns provide useful signals for understanding customer spending.
+
+These findings can support:
+
+- **Customer segmentation**
+- **Targeted marketing**
+- **Personalized campaigns**
+- **High-value customer identification**
+- **Customer retention**
+- **Revenue-related forecasting**
+- **Data-driven marketing decisions**
+
+---
+
+## Business Value
+
+The project demonstrates how machine learning can move customer analytics beyond simply describing what happened.
+
+Instead, historical customer data can be used to answer questions such as:
+
+> **Who is likely to spend more?**
+
+> **Who is more likely to respond to a campaign?**
+
+> **Which customer characteristics provide useful predictive signals?**
+
+This creates a foundation for more targeted allocation of marketing resources and more informed customer relationship decisions.
+
+---
+
+## Project Workflow
+
+```text
+Customer Dataset
+       ↓
+Data Quality Assessment
+       ↓
+Exploratory Data Analysis
+       ↓
+Feature Engineering & Selection
+       ↓
+Data Preprocessing & Scaling
+       ↓
+Train / Test Split
+       ↓
+Regression + Classification
+       ↓
+Model Evaluation & Comparison
+       ↓
+Business Insights
