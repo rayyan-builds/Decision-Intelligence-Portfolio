@@ -1,4 +1,8 @@
-![Data Analytics](https://img.shields.io/badge/📊_Data_Analytics-Business_Analytics_%7C_Python%2C_Pandas_%26_Data_Analysis-2C5364?style=for-the-badge)
+<div align="center">
+
+![Data Analytics](https://img.shields.io/badge/📊_Data_Analytics-2C5364?style=for-the-badge)
+
+</div>
 
 This folder contains data analytics projects focused on transforming raw datasets into meaningful business insights through **data cleaning, exploratory analysis, statistical analysis, visualization, and analytical modeling**.
 
