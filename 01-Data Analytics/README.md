@@ -1,4 +1,4 @@
-![Data Analytics](https://capsule-render.vercel.app/api?type=waving&color=0:0F2027,50:203A43,100:2C5364&height=160&section=header&text=Data+Analytics&fontSize=38&fontColor=ffffff&animation=fadeIn&fontAlignY=40&desc=Business+Analytics+-+Python%2C+Pandas+%26+Data+Analysis&descAlignY=62&descSize=16)
+![Data Analytics](https://img.shields.io/badge/📊_Data_Analytics-Business_Analytics_%7C_Python%2C_Pandas_%26_Data_Analysis-2C5364?style=for-the-badge)
 
 This folder contains data analytics projects focused on transforming raw datasets into meaningful business insights through **data cleaning, exploratory analysis, statistical analysis, visualization, and analytical modeling**.
 
