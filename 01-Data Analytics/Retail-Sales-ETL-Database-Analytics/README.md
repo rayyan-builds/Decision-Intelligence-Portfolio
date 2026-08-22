@@ -1,63 +1,178 @@
-# 🛒 Retail Sales ETL & Database Analytics
+# Retail Sales ETL & Database Analytics Pipeline
 
-> **Turning raw retail transaction data into a structured SQL analytics system for revenue, customer, product, sales-trend, and profitability analysis.**
+### Database Systems for Business — MySQL, SQL, Python & Pandas
 
-**Database Systems for Business**  
-*MySQL · SQL · Python · Pandas · ETL · Relational Database Design · Business Analytics*
+An end-to-end retail data engineering and analytics project that transforms **5,000 raw retail transactions** into a structured relational database and uses SQL-driven business intelligence queries to answer revenue, customer, sales-trend, product, and profitability questions.
 
----
-
-## 📌 Project Overview
-
-This project develops an end-to-end **ETL and relational database analytics pipeline** using a modified Superstore retail dataset containing **5,000 transaction records**.
-
-The objective was to transform a flat, difficult-to-analyze dataset into a structured **3NF relational database**, then use SQL to answer practical business questions around revenue, customers, sales trends, products, and profitability.
-
-The project combines **Python/Pandas for data preparation and ETL** with **MySQL/SQL for database design, data migration, validation, and business intelligence analysis**.
-
-The final pipeline demonstrates how raw transactional data can be converted into a reliable analytical foundation for business decision-making.
+The project combines **ETL, data cleaning, relational database design, SQL analytics, and Python/Pandas-based data processing** to demonstrate how raw transactional data can be converted into reliable information for business decision-making.
 
 ---
 
-## 🎯 Business Objective
+## Project Overview
 
-The project was designed to answer five core business questions:
+The original Superstore dataset contained **5,000 retail transaction records** with customer, order, product, sales, quantity, discount, profit, shipping, and geographic information.
 
-1. **How much revenue was generated in 2014?**
-2. **Which customers generated the highest purchase volumes?**
-3. **How do sales vary across months?**
-4. **Which products have the highest quantities sold?**
-5. **Which product categories generate the most profit?**
+The project follows an ETL-oriented workflow:
 
-These questions provide a practical view of **revenue performance, customer value, demand patterns, product performance, and profitability**.
+**Raw Retail Data → Cleaning & Validation → Staging Table → Relational Database → SQL Analytics → Business Insights**
+
+The transactional data was transformed into a normalized relational structure consisting of:
+
+- `Customers`
+- `Products`
+- `Orders`
+- `Order_Details`
+
+Primary keys and foreign-key relationships were implemented to establish relationships between customers, orders, products, and transaction details.
+
+The SQL workflow also addresses data-quality issues encountered during migration, including duplicate order-product combinations, inconsistent product naming, and repeated customer/order records.
 
 ---
 
-## 🔄 ETL & Database Pipeline
+## Project Objectives
+
+- Transform raw retail transaction data into a structured relational database.
+- Apply ETL and data-cleaning principles to improve data quality.
+- Design a normalized relational database structure.
+- Establish primary-key and foreign-key relationships.
+- Use SQL to perform business-oriented analytical queries.
+- Identify revenue, customer, product, sales-trend, and profitability insights.
+- Produce reproducible HTML outputs for database validation and analytical results.
+
+---
+
+## Technology Stack
+
+| Area | Tools |
+|---|---|
+| Database | **MySQL** |
+| Primary Analytics Language | **SQL** |
+| Data Processing | **Python, Pandas** |
+| Data Format | CSV |
+| ETL | SQL + Python/Pandas |
+| Database Design | Relational Database / 3NF principles |
+| Outputs | HTML query-result files |
+
+---
+
+## Dataset & Data Pipeline
+
+The source dataset is a **retail/superstore transactional dataset** containing individual order-line records. It combines information about customers, orders, products, sales performance, profitability, shipping, and geographic markets.
+
+The dataset contained:
+
+**5,000 raw retail transaction records**
+
+The data provides both **categorical dimensions** for segmentation and analysis and **numerical measures** for evaluating sales and business performance.
+
+### Dataset Categories & Dimensions
+
+The main categorical dimensions include:
+
+- **Customer:** Customer name and customer segment
+- **Order:** Order ID, order date, ship date, ship mode, and order priority
+- **Product:** Product ID, product name, category, and sub-category
+- **Geography:** State, country, market, and region
+- **Performance:** Sales, quantity, discount, profit, and shipping cost
+- **Time:** Order year, order date, and ship date
+
+### Source Dataset Columns
+
+The original staging dataset contains the following columns:
+
+| Column | Description |
+|---|---|
+| `order_id` | Unique identifier associated with an order |
+| `order_date` | Date on which the order was placed |
+| `ship_date` | Date on which the order was shipped |
+| `ship_mode` | Shipping method used for the order |
+| `customer_name` | Customer associated with the transaction |
+| `segment` | Customer segment |
+| `state` | State associated with the transaction |
+| `country` | Country associated with the transaction |
+| `market` | Geographic market |
+| `region` | Geographic region |
+| `product_id` | Product identifier |
+| `category` | Main product category |
+| `sub_category` | Product sub-category |
+| `product_name` | Name of the product |
+| `sales` | Sales/revenue generated by the transaction |
+| `quantity` | Number of units sold |
+| `discount` | Discount applied to the transaction |
+| `profit` | Profit generated by the transaction |
+| `shipping_cost` | Cost associated with shipping |
+| `order_priority` | Priority assigned to the order |
+| `year` | Year associated with the transaction |
+
+These fields allow the dataset to support analysis across several business perspectives, including **customer purchasing behavior, product demand, revenue generation, sales patterns, geographic performance, shipping, and profitability**.
+
+### Dataset Structure
+
+The source data contains a combination of:
+
+**Identifiers**
+- Order ID
+- Product ID
+
+**Dates & Time**
+- Order Date
+- Ship Date
+- Year
+
+**Customer & Market Dimensions**
+- Customer Name
+- Segment
+- State
+- Country
+- Market
+- Region
+
+**Product Dimensions**
+- Product Name
+- Category
+- Sub-Category
+
+**Business Measures**
+- Sales
+- Quantity
+- Discount
+- Profit
+- Shipping Cost
+
+**Operational Attributes**
+- Ship Mode
+- Order Priority
+
+After loading the data into the staging layer, the SQL pipeline transformed it into four related tables.
+
+---
+
+## Project at a Glance
+
+| Metric | Result |
+|---|---:|
+| Raw/Staging Records | **5,000** |
+| Customers Created | **3,571** |
+| Products Created | **3,798** |
+| Orders Created | **3,624** |
+| Order Details | **4,997** |
+| Duplicate Order-Product Pairs Resolved | **3** |
+| Business Questions Answered | **5** |
+| 2014 Revenue Identified | **$262,880.28** |
+| Highest Monthly Sales | **$106,158.62 — March** |
+| Highest-Value Customer | **$4,675.00** |
+| Highest Product Quantity | **79 units** |
+| Most Profitable Category | **Technology — $61,647.01** |
+
+---
+
+### Final Database Structure
 
 ```text
-Raw Superstore Dataset
-        │
-        ▼
-Python / Pandas
-Data Cleaning & Preparation
-        │
-        ▼
-MySQL Staging Layer
-        │
-        ▼
-Data Transformation & Validation
-        │
-        ▼
-Normalized 3NF Database
-        │
-        ├── Customers
-        ├── Products
-        ├── Orders
-        └── Order_Details
-        │
-        ▼
-SQL Business Queries
-        │
-        ▼
-Business Insights & HTML Outputs
+Customers
+    │
+    └── Orders
+            │
+            └── Order_Details
+                    │
+                    └── Products
