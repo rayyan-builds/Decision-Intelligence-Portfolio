@@ -1,169 +1,61 @@
-# Customer Personality Analysis
+<div align="center">
 
-> Predictive customer analytics using machine learning to understand spending behaviour and marketing campaign response.
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F2027,50:203A43,100:2C5364&height=160&section=header&text=Data%20Analytics&fontSize=38&fontColor=ffffff&animation=fadeIn&fontAlignY=40&desc=Business%20Analytics%20—%20Python%2C%20Pandas%20%26%20Data%20Analysis&descAlignY=62&descSize=16" width="100%"/>
 
-**Python** · **Scikit-learn** · **Pandas** · **Machine Learning** · **Customer Analytics** · **Marketing Analytics**
+</div>
 
----
+This folder contains data analytics projects focused on transforming raw datasets into meaningful business insights through **data cleaning, exploratory analysis, statistical analysis, visualization, and analytical modeling**.
 
-## Business Problem
-
-Businesses collect large amounts of customer demographic, purchasing, web activity, and campaign data, but raw customer data alone does not explain which customers are likely to spend more or respond to marketing campaigns.
-
-This project applies machine learning to address two business problems:
-
-1. **How accurately can customer spending behaviour be predicted?**
-2. **Can customers likely to respond positively to a marketing campaign be identified?**
-
-The objective was not only to compare machine learning models, but to translate their results into insights relevant to customer segmentation, targeted marketing, and business decision-making.
+The projects demonstrate how analytical techniques can be applied to understand customer behavior, identify patterns, evaluate business performance, and support data-driven decision-making.
 
 ---
 
-## Key Results
+## 🎯 Purpose
 
-| Area | Result |
+The **Data Analytics** folder focuses on the analytical stage of the data lifecycle:
+
+> **Raw Data → Data Cleaning → Exploration → Analysis → Visualization → Business Insights**
+
+Projects in this section are designed to demonstrate practical analytical thinking rather than simply producing charts or dashboards.
+
+---
+
+## 🛠️ Technology Stack
+
+| Area | Tools |
 |---|---|
-| Dataset | **2,240 customer records** |
-| Regression Task | Predict customer total spending |
-| Best Regression Model | **Random Forest Regressor** |
-| Best Regression R² | **0.8795** |
-| Weakest Regression R² | **0.1120 — SVR** |
-| Classification Task | Predict positive campaign response |
-| Best Classification Model | **Random Forest Classifier** |
+| 🐍 Programming | **Python** |
+| 🧮 Data Manipulation | **Pandas, NumPy** |
+| 📈 Data Analysis | **Python / Statistical Analysis** |
+| 🎨 Visualization | **Matplotlib, Seaborn** |
+| 📓 Environment | **Jupyter Notebook** |
+| 🗂️ Data Sources | **CSV / Kaggle / Public Datasets** |
 
-The Random Forest Regressor substantially outperformed the other regression approaches, capturing complex non-linear relationships in customer spending behaviour.
+<div align="center">
 
-For classification, Random Forest produced the strongest overall balance across the evaluated metrics. Because the campaign-response data was imbalanced, F1 Score was considered alongside accuracy, precision, and recall rather than relying on accuracy alone.
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
+![Matplotlib](https://img.shields.io/badge/Matplotlib-11557C?style=for-the-badge&logo=plotly&logoColor=white)
+![Seaborn](https://img.shields.io/badge/Seaborn-2C5364?style=for-the-badge)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white)
 
----
-
-## What I Built
-
-An end-to-end customer analytics workflow covering:
-
-**Data → EDA → Preprocessing → Feature Engineering → Model Training → Model Comparison → Business Insights**
-
-The project included:
-
-- Exploratory Data Analysis
-- Data quality assessment
-- Missing-value treatment
-- Duplicate checking
-- Categorical variable encoding
-- Feature engineering
-- Feature selection
-- Feature scaling
-- Regression modelling
-- Classification modelling
-- Model evaluation
-- Business interpretation
-
-Target leakage was also considered when preparing the regression features.
+</div>
 
 ---
 
-## Machine Learning Approach
+## 📁 Project Structure
 
-### Regression
-
-Five regression models were developed and compared:
-
-- Linear Regression
-- Support Vector Regression (SVR)
-- Decision Tree Regressor
-- Random Forest Regressor
-- K-Nearest Neighbors (KNN) Regressor
-
-**Evaluation metrics:**
-
-`MAE` · `MSE` · `RMSE` · `R²`
-
-### Classification
-
-Five classification models were evaluated:
-
-- Logistic Regression
-- KNN Classifier
-- Decision Tree Classifier
-- Random Forest Classifier
-- Support Vector Machine (SVM)
-
-**Evaluation metrics:**
-
-`Accuracy` · `Precision` · `Recall` · `F1 Score`
-
----
-
-## Why Random Forest Performed Best
-
-The Random Forest Regressor achieved an **R² of 0.8795**, substantially outperforming SVR at **0.1120**.
-
-This indicates that the ensemble approach was better able to capture the non-linear relationships between customer characteristics, purchasing behaviour, and spending.
-
-For classification, Random Forest achieved the strongest overall performance, while the Decision Tree model showed stronger recall in identifying positive campaign responders. This illustrates an important business trade-off: the "best" model can depend on whether a company prioritizes overall predictive balance or identifying as many potential responders as possible.
-
----
-
-## Business Insights
-
-The analysis identified relationships between:
-
-- Customer income
-- Purchasing activity
-- Customer engagement
-- Recency
-- Spending behaviour
-- Marketing campaign response
-
-One notable finding was that higher-income customers tended to demonstrate higher spending behaviour.
-
-The analysis also showed that purchasing activity and customer engagement patterns provide useful signals for understanding customer spending.
-
-These findings can support:
-
-- **Customer segmentation**
-- **Targeted marketing**
-- **Personalized campaigns**
-- **High-value customer identification**
-- **Customer retention**
-- **Revenue-related forecasting**
-- **Data-driven marketing decisions**
-
----
-
-## Business Value
-
-The project demonstrates how machine learning can move customer analytics beyond simply describing what happened.
-
-Instead, historical customer data can be used to answer questions such as:
-
-> **Who is likely to spend more?**
-
-> **Who is more likely to respond to a campaign?**
-
-> **Which customer characteristics provide useful predictive signals?**
-
-This creates a foundation for more targeted allocation of marketing resources and more informed customer relationship decisions.
-
----
-
-## Project Workflow
+Each project may contain:
 
 ```text
-Customer Dataset
-       ↓
-Data Quality Assessment
-       ↓
-Exploratory Data Analysis
-       ↓
-Feature Engineering & Selection
-       ↓
-Data Preprocessing & Scaling
-       ↓
-Train / Test Split
-       ↓
-Regression + Classification
-       ↓
-Model Evaluation & Comparison
-       ↓
-Business Insights
+Data Analytics
+│
+├── Project/
+│   ├── dataset.csv
+│   ├── analysis.ipynb
+│   ├── project_report.pdf
+│   └── README.md
+│
+└── README.md
+```
