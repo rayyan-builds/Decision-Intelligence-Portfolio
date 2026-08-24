@@ -1,6 +1,6 @@
 # 🚛 Fleet Fuel Optimization Tool
 
-### Data Structures and Business Applications — Semester Project (Option 25)
+### Data Structures and Business Applications — Semester Project 
 
 A fleet management system that applies core data structures — **arrays, custom sorting algorithms, a binary heap, and search algorithms** — to solve a real logistics problem: efficiently monitoring, comparing, and prioritizing vehicles by fuel efficiency across a business fleet.
 
