@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🏗️ Horizon Bid Room
+<img src="./assets/horizon_logo.jpg" alt="Horizon Tech Services Logo" width="90" />
+
+# Horizon Bid Room
 ### Tender Performance & Business Intelligence Dashboard
 
 **Transforming raw bidding data into a decision-support system for tender strategy, win-rate analysis, and profitability management.**
