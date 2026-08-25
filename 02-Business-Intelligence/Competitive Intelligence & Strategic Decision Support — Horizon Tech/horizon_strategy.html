@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horizon Strategy Command Center</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #080c14;
+    --surface: #0d1420;
+    --surface2: #111b2e;
+    --border: #1a2a42;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --danger: #f43f5e;
+    --warn: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --dim: #334155;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BG */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* TOP BAR */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,12,20,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .logo span { color: var(--accent); }
+
+  .header-right {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .live-badge {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent3);
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .live-dot {
+    width: 6px; height: 6px;
+    background: var(--accent3);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+  /* LAYOUT */
+  .app {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    height: calc(100vh - 60px);
+  }
+
+  /* SIDEBAR */
+  aside {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px 0;
+  }
+
+  .sidebar-section {
+    padding: 8px 16px 4px;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active {
+    background: rgba(0,212,255,0.07);
+    border-left-color: var(--accent);
+    color: var(--accent);
+  }
+  .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--accent2);
+    color: white;
+    font-size: 0.6rem;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .progress-mini {
+    margin-left: auto;
+    width: 40px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-mini-fill {
+    height: 100%;
+    background: var(--accent3);
+    border-radius: 2px;
+    transition: width 0.5s;
+  }
+
+  /* MAIN */
+  main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* PAGE HEADER */
+  .page-header {
+    margin-bottom: 24px;
+  }
+  .page-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 6px;
+  }
+  .page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .page-sub {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 6px;
+  }
+
+  /* KPI ROW */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .kpi.blue::before { background: linear-gradient(90deg, var(--accent), transparent); }
+  .kpi.purple::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+  .kpi.green::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+  .kpi.red::before { background: linear-gradient(90deg, var(--danger), transparent); }
+  .kpi.warn::before { background: linear-gradient(90deg, var(--warn), transparent); }
+
+  .kpi-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .kpi-value { font-size: 1.6rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .kpi-value.blue { color: var(--accent); }
+  .kpi-value.purple { color: var(--accent2); }
+  .kpi-value.green { color: var(--accent3); }
+  .kpi-value.warn { color: var(--warn); }
+  .kpi-sub { font-size: 0.7rem; color: var(--muted); margin-top: 4px; }
+
+  /* CARDS */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 16px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-title-badge {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .badge-blue { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+  .badge-green { background: rgba(16,185,129,0.1); color: var(--accent3); border: 1px solid rgba(16,185,129,0.2); }
+  .badge-warn { background: rgba(245,158,11,0.1); color: var(--warn); border: 1px solid rgba(245,158,11,0.2); }
+  .badge-purple { background: rgba(124,58,237,0.1); color: var(--accent2); border: 1px solid rgba(124,58,237,0.2); }
+
+  /* PILLAR PROGRESS */
+  .pillar-list { display: flex; flex-direction: column; gap: 10px; }
+  .pillar-item { }
+  .pillar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .pillar-name { font-size: 0.78rem; color: var(--text); }
+  .pillar-pct { font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; color: var(--accent); }
+  .bar { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+
+  /* COMPARISON TABLE */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .compare-table th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(26,42,66,0.5);
+    vertical-align: top;
+  }
+  .compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .cs-cell { color: var(--muted); }
+  .hz-cell { color: var(--accent3); }
+  .area-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* RADAR CHART */
+  .radar-wrapper { display: flex; justify-content: center; align-items: center; padding: 10px 0; }
+
+  /* STRATEGY CARDS */
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .strategy-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .strategy-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,212,255,0.1);
+  }
+  .strategy-card .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .strategy-card h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; }
+  .strategy-card p { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+  .strategy-card .status-dot {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .dot-active { background: var(--accent3); box-shadow: 0 0 6px var(--accent3); }
+  .dot-progress { background: var(--warn); box-shadow: 0 0 6px var(--warn); }
+  .dot-planned { background: var(--dim); }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface2);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.82rem;
+  }
+  .check-item:hover { border-color: var(--accent); }
+  .check-item.done { opacity: 0.5; }
+  .check-box {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    border: 2px solid var(--dim);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    transition: all 0.15s;
+  }
+  .check-item.done .check-box {
+    background: var(--accent3);
+    border-color: var(--accent3);
+    color: #000;
+  }
+
+  /* ROADMAP */
+  .roadmap { position: relative; padding-left: 24px; }
+  .roadmap::before {
+    content: '';
+    position: absolute;
+    left: 6px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--dim));
+  }
+  .rm-item {
+    position: relative;
+    margin-bottom: 20px;
+    padding-left: 16px;
+  }
+  .rm-item::before {
+    content: '';
+    position: absolute;
+    left: -18px; top: 6px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: var(--bg);
+  }
+  .rm-item.done::before { background: var(--accent3); border-color: var(--accent3); }
+  .rm-item.current::before {
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    animation: pulse 1.5s infinite;
+  }
+  .rm-q { font-size: 0.65rem; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-bottom: 3px; }
+  .rm-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 2px; }
+  .rm-sub { font-size: 0.72rem; color: var(--muted); }
+
+  /* TABS */
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+  .tab-btn {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* PRIORITY TABLE */
+  .priority-list { display: flex; flex-direction: column; gap: 10px; }
+  .priority-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--surface2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .priority-rank {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    width: 28px;
+    flex-shrink: 0;
+  }
+  .priority-info { flex: 1; }
+  .priority-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 2px; }
+  .priority-sub { font-size: 0.72rem; color: var(--muted); }
+  .priority-impact {
+    font-size: 0.7rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .impact-high { background: rgba(16,185,129,0.1); color: var(--accent3); border: 1px solid rgba(16,185,129,0.2); }
+  .impact-med { background: rgba(245,158,11,0.1); color: var(--warn); border: 1px solid rgba(245,158,11,0.2); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--dim); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    aside { display: none; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    main { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🛡</div>
+    HORIZON <span>Strategy</span>
+  </div>
+  <div class="header-right">
+    <div class="live-badge"><div class="live-dot"></div> LIVE DASHBOARD</div>
+  </div>
+</header>
+
+<div class="app">
+  <aside>
+    <div class="sidebar-section">Overview</div>
+    <div class="nav-item active" onclick="navigate('dashboard', this)">
+      <span class="nav-icon">📊</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="navigate('strategies', this)">
+      <span class="nav-icon">🎯</span> All Strategies
+      <span class="nav-badge">16</span>
+    </div>
+    <div class="nav-item" onclick="navigate('compare', this)">
+      <span class="nav-icon">⚖️</span> vs CrowdStrike
+    </div>
+
+    <div class="sidebar-section" style="margin-top:12px;">Pillars</div>
+    <div class="nav-item" onclick="navigate('ai', this)">
+      <span class="nav-icon">🤖</span> AI Platform
+      <div class="progress-mini"><div class="progress-mini-fill" style="width:30%"></div></div>
+    </div>
+    <div class="nav-item" onclick="navigate('platform', this)">
+      <span class="nav-icon">☁️</span> Unified Platform
+      <div class="progress-mini"><div class="progress-mini-fill" style="width:25%"></div></div>
+    </div>
+    <div class="nav-item" onclick="navigate('global', this)">
+      <span class="nav-icon">🌐</span> Global Expansion
+      <div class="progress-mini"><div class="progress-mini-fill" style="width:15%"></div></div>
+    </div>
+    <div class="nav-item" onclick="navigate('talent', this)">
+      <span class="nav-icon">👥</span> Talent & R&D
+      <div class="progress-mini"><div class="progress-mini-fill" style="width:40%"></div></div>
+    </div>
+
+    <div class="sidebar-section" style="margin-top:12px;">Execution</div>
+    <div class="nav-item" onclick="navigate('roadmap', this)">
+      <span class="nav-icon">🗺</span> Roadmap
+    </div>
+    <div class="nav-item" onclick="navigate('checklist', this)">
+      <span class="nav-icon">✅</span> Action Items
+      <span class="nav-badge">42</span>
+    </div>
+    <div class="nav-item" onclick="navigate('priorities', this)">
+      <span class="nav-icon">⚡</span> Priorities
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div class="page-label">Command Center</div>
+        <div class="page-title">Horizon Strategy Dashboard</div>
+        <div class="page-sub">Tracking 16 strategic pillars to compete with CrowdStrike</div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi blue">
+          <div class="kpi-label">Strategy Pillars</div>
+          <div class="kpi-value blue">16</div>
+          <div class="kpi-sub">Defined initiatives</div>
+        </div>
+        <div class="kpi green">
+          <div class="kpi-label">Avg Completion</div>
+          <div class="kpi-value green" id="avg-pct">27%</div>
+          <div class="kpi-sub">Across all pillars</div>
+        </div>
+        <div class="kpi warn">
+          <div class="kpi-label">In Progress</div>
+          <div class="kpi-value warn">6</div>
+          <div class="kpi-sub">Active initiatives</div>
+        </div>
+        <div class="kpi purple">
+          <div class="kpi-label">Planned</div>
+          <div class="kpi-value purple">10</div>
+          <div class="kpi-sub">Not yet started</div>
+        </div>
+        <div class="kpi red">
+          <div class="kpi-label">Priority Score</div>
+          <div class="kpi-value" style="color:var(--danger)">P1</div>
+          <div class="kpi-sub">AI platform build</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">16 Strategy Pillars <span class="card-title-badge badge-blue">Progress</span></div>
+          <div class="pillar-list">
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">1. AI-Driven Platform</span><span class="pillar-pct">30%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:30%;background:var(--accent)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">2. Unified Platform</span><span class="pillar-pct">25%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:25%;background:var(--accent)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">3. Global Threat Intel</span><span class="pillar-pct">20%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:20%;background:var(--warn)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">4. Cloud-Native Arch</span><span class="pillar-pct">35%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:35%;background:var(--accent3)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">5. International Presence</span><span class="pillar-pct">15%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:15%;background:var(--warn)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">6. R&D Investment</span><span class="pillar-pct">40%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:40%;background:var(--accent3)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">7. SOC / MDR</span><span class="pillar-pct">22%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:22%;background:var(--accent)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">8. Certifications</span><span class="pillar-pct">50%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:50%;background:var(--accent3)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">9. Customer Success</span><span class="pillar-pct">33%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:33%;background:var(--accent)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">10. Pricing Model</span><span class="pillar-pct">45%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:45%;background:var(--accent3)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">11. Brand Building</span><span class="pillar-pct">28%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:28%;background:var(--warn)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">12. Ecosystem & APIs</span><span class="pillar-pct">18%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:18%;background:var(--accent2)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">13. Customer Experience</span><span class="pillar-pct">38%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:38%;background:var(--accent3)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">14. Managed Services</span><span class="pillar-pct">20%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:20%;background:var(--warn)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">15. Skilled Talent</span><span class="pillar-pct">42%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:42%;background:var(--accent3)"></div></div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-header"><span class="pillar-name">16. Innovation</span><span class="pillar-pct">12%</span></div>
+              <div class="bar"><div class="bar-fill" style="width:12%;background:var(--accent2)"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="card">
+            <div class="card-title">Radar: Horizon vs CrowdStrike <span class="card-title-badge badge-purple">Visual</span></div>
+            <div class="radar-wrapper">
+              <svg viewBox="0 0 300 300" width="260" height="260">
+                <defs>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+                <!-- Grid rings -->
+                <polygon points="150,30 240,90 240,210 150,270 60,210 60,90" fill="none" stroke="#1a2a42" stroke-width="1"/>
+                <polygon points="150,62 220,110 220,190 150,238 80,190 80,110" fill="none" stroke="#1a2a42" stroke-width="1"/>
+                <polygon points="150,94 200,130 200,170 150,206 100,170 100,130" fill="none" stroke="#1a2a42" stroke-width="1"/>
+                <polygon points="150,126 180,150 180,150 150,174 120,150 120,150" fill="none" stroke="#1a2a42" stroke-width="1"/>
+                <!-- Axes -->
+                <line x1="150" y1="30" x2="150" y2="150" stroke="#1a2a42" stroke-width="1"/>
+                <line x1="240" y1="90" x2="150" y2="150" stroke="#1a2a42" stroke-width="1"/>
+                <line x1="240" y1="210" x2="150" y2="150" stroke="#1a2a42" stroke-width="1"/>
+                <line x1="150" y1="270" x2="150" y2="150" stroke="#1a2a42" stroke-width="1"/>
+                <line x1="60" y1="210" x2="150" y2="150" stroke="#1a2a42" stroke-width="1"/>
+                <line x1="60" y1="90" x2="150" y2="150" stroke="#1a2a42" stroke-width="1"/>
+                <!-- CrowdStrike (90%) -->
+                <polygon points="150,47 229,97 229,203 150,254 71,203 71,97" fill="rgba(244,63,94,0.1)" stroke="#f43f5e" stroke-width="1.5" filter="url(#glow)"/>
+                <!-- Horizon (35%) -->
+                <polygon points="150,107 189,128 189,172 150,192 111,172 111,128" fill="rgba(0,212,255,0.15)" stroke="#00d4ff" stroke-width="2" filter="url(#glow)"/>
+                <!-- Labels -->
+                <text x="150" y="24" text-anchor="middle" font-size="9" fill="#64748b" font-family="Space Grotesk">AI</text>
+                <text x="248" y="90" font-size="9" fill="#64748b" font-family="Space Grotesk">Cloud</text>
+                <text x="244" y="220" font-size="9" fill="#64748b" font-family="Space Grotesk">Brand</text>
+                <text x="150" y="285" text-anchor="middle" font-size="9" fill="#64748b" font-family="Space Grotesk">SOC</text>
+                <text x="28" y="220" font-size="9" fill="#64748b" font-family="Space Grotesk">Intel</text>
+                <text x="34" y="90" font-size="9" fill="#64748b" font-family="Space Grotesk">R&D</text>
+                <!-- Legend -->
+                <rect x="58" y="268" width="8" height="8" fill="#f43f5e" rx="2"/>
+                <text x="70" y="276" font-size="8" fill="#64748b" font-family="Space Grotesk">CrowdStrike</text>
+                <rect x="140" y="268" width="8" height="8" fill="#00d4ff" rx="2"/>
+                <text x="152" y="276" font-size="8" fill="#64748b" font-family="Space Grotesk">Horizon (target)</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Top 5 Priorities <span class="card-title-badge badge-green">Strategic</span></div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;gap:10px;align-items:center;padding:8px;background:var(--surface2);border-radius:8px;font-size:0.78rem;">
+                <span style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:700;">P1</span>
+                <span>Cloud-native AI-powered security platform</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center;padding:8px;background:var(--surface2);border-radius:8px;font-size:0.78rem;">
+                <span style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:700;">P2</span>
+                <span>Threat intelligence & MDR capabilities</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center;padding:8px;background:var(--surface2);border-radius:8px;font-size:0.78rem;">
+                <span style="color:var(--warn);font-family:'JetBrains Mono',monospace;font-weight:700;">P3</span>
+                <span>Enterprise tool integrations & open APIs</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center;padding:8px;background:var(--surface2);border-radius:8px;font-size:0.78rem;">
+                <span style="color:var(--warn);font-family:'JetBrains Mono',monospace;font-weight:700;">P4</span>
+                <span>R&D investment & cybersecurity talent</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center;padding:8px;background:var(--surface2);border-radius:8px;font-size:0.78rem;">
+                <span style="color:var(--dim);font-family:'JetBrains Mono',monospace;font-weight:700;">P5</span>
+                <span>International growth via partnerships</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STRATEGIES -->
+    <div class="page" id="page-strategies">
+      <div class="page-header">
+        <div class="page-label">All Initiatives</div>
+        <div class="page-title">16 Strategic Pillars</div>
+        <div class="page-sub">Click any card to explore details and track progress</div>
+      </div>
+      <div class="strategy-grid" id="strategy-grid"></div>
+    </div>
+
+    <!-- COMPARE -->
+    <div class="page" id="page-compare">
+      <div class="page-header">
+        <div class="page-label">Competitive Analysis</div>
+        <div class="page-title">Horizon vs CrowdStrike</div>
+        <div class="page-sub">Gap analysis across 10 key dimensions</div>
+      </div>
+      <div class="card">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>CrowdStrike Strength</th>
+              <th>Horizon Action</th>
+              <th>Gap</th>
+            </tr>
+          </thead>
+          <tbody id="compare-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- AI PAGE -->
+    <div class="page" id="page-ai">
+      <div class="page-header">
+        <div class="page-label">Pillar 1</div>
+        <div class="page-title">AI-Driven Security Platform</div>
+        <div class="page-sub">Develop AI/ML capabilities to match CrowdStrike's automated threat detection</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(this, 'ai-overview')">Overview</button>
+        <button class="tab-btn" onclick="switchTab(this, 'ai-actions')">Action Items</button>
+      </div>
+      <div id="ai-overview" class="tab-pane active">
+        <div class="grid-3">
+          <div class="kpi blue"><div class="kpi-label">Completion</div><div class="kpi-value blue">30%</div></div>
+          <div class="kpi warn"><div class="kpi-label">Status</div><div class="kpi-value warn" style="font-size:1rem;">In Progress</div></div>
+          <div class="kpi green"><div class="kpi-label">Priority</div><div class="kpi-value green" style="font-size:1rem;">P1 Critical</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Benefits</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+            <div style="background:var(--surface2);padding:14px;border-radius:8px;border:1px solid var(--border);">
+              <div style="color:var(--accent);font-size:1.2rem;margin-bottom:6px;">⚡</div>
+              <div style="font-size:0.8rem;font-weight:600;margin-bottom:4px;">Faster Detection</div>
+              <div style="font-size:0.7rem;color:var(--muted);">Real-time AI identification of threats before impact</div>
+            </div>
+            <div style="background:var(--surface2);padding:14px;border-radius:8px;border:1px solid var(--border);">
+              <div style="color:var(--accent3);font-size:1.2rem;margin-bottom:6px;">⏱</div>
+              <div style="font-size:0.8rem;font-weight:600;margin-bottom:4px;">Reduced Response</div>
+              <div style="font-size:0.7rem;color:var(--muted);">Automated incident response cuts MTTR significantly</div>
+            </div>
+            <div style="background:var(--surface2);padding:14px;border-radius:8px;border:1px solid var(--border);">
+              <div style="color:var(--accent2);font-size:1.2rem;margin-bottom:6px;">🛡</div>
+              <div style="font-size:0.8rem;font-weight:600;margin-bottom:4px;">Zero-day Defense</div>
+              <div style="font-size:0.7rem;color:var(--muted);">Protection against previously unknown attack patterns</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="ai-actions" class="tab-pane">
+        <div class="checklist" id="ai-checklist"></div>
+      </div>
+    </div>
+
+    <!-- PLATFORM PAGE -->
+    <div class="page" id="page-platform">
+      <div class="page-header">
+        <div class="page-label">Pillar 2</div>
+        <div class="page-title">Unified Cybersecurity Platform</div>
+        <div class="page-sub">Build a single integrated cloud-native security suite</div>
+      </div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">Platform Modules to Build</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;">
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;border:1px solid rgba(0,212,255,0.2);font-size:0.78rem;text-align:center;">🖥 EDR</div>
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:0.78rem;text-align:center;color:var(--muted);">🔍 XDR</div>
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:0.78rem;text-align:center;color:var(--muted);">🔑 Identity Protection</div>
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:0.78rem;text-align:center;color:var(--muted);">☁️ Cloud Security</div>
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:0.78rem;text-align:center;color:var(--muted);">📧 Email Security</div>
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:0.78rem;text-align:center;color:var(--muted);">🔒 Vuln Mgmt</div>
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:0.78rem;text-align:center;color:var(--muted);">🧠 Threat Intel</div>
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:0.78rem;text-align:center;color:var(--muted);">📋 Log Mgmt</div>
+        </div>
+        <div style="margin-top:10px;font-size:0.7rem;color:var(--muted);">🟢 Green border = in development &nbsp; Grey = planned</div>
+      </div>
+    </div>
+
+    <!-- GLOBAL PAGE -->
+    <div class="page" id="page-global">
+      <div class="page-header">
+        <div class="page-label">Pillar 5</div>
+        <div class="page-title">International Expansion</div>
+        <div class="page-sub">Expand regional presence to match CrowdStrike's global reach</div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Target Regions</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;font-size:0.8rem;">
+              <span>🇺🇸 North America</span><span class="card-title-badge badge-warn">Planning</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;font-size:0.8rem;">
+              <span>🇪🇺 Europe</span><span class="card-title-badge badge-warn">Planning</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;font-size:0.8rem;">
+              <span>🇦🇪 Middle East</span><span class="card-title-badge badge-purple">Research</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;font-size:0.8rem;">
+              <span>🌏 Asia-Pacific</span><span class="card-title-badge badge-purple">Research</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Expansion Requirements</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:0.78rem;color:var(--muted);">
+            <div style="padding:8px;background:var(--surface2);border-radius:6px;">🏢 Regional office setup</div>
+            <div style="padding:8px;background:var(--surface2);border-radius:6px;">👔 Local sales team hiring</div>
+            <div style="padding:8px;background:var(--surface2);border-radius:6px;">🗣 Multilingual support</div>
+            <div style="padding:8px;background:var(--surface2);border-radius:6px;">🤝 Regional distributors</div>
+            <div style="padding:8px;background:var(--surface2);border-radius:6px;">📜 Local compliance (GDPR etc.)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TALENT PAGE -->
+    <div class="page" id="page-talent">
+      <div class="page-header">
+        <div class="page-label">Pillar 15</div>
+        <div class="page-title">Skilled Talent & R&D</div>
+        <div class="page-sub">Build world-class cybersecurity teams to drive innovation</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Hiring Domains</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;">
+          <div style="padding:14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
+            <div style="font-size:0.8rem;font-weight:600;margin-bottom:4px;">🦠 Malware Analysis</div>
+            <div style="font-size:0.7rem;color:var(--muted);">Reverse engineer threats</div>
+          </div>
+          <div style="padding:14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
+            <div style="font-size:0.8rem;font-weight:600;margin-bottom:4px;">🧠 AI / ML Engineers</div>
+            <div style="font-size:0.7rem;color:var(--muted);">Build detection models</div>
+          </div>
+          <div style="padding:14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
+            <div style="font-size:0.8rem;font-weight:600;margin-bottom:4px;">🔍 Threat Hunters</div>
+            <div style="font-size:0.7rem;color:var(--muted);">Proactive threat research</div>
+          </div>
+          <div style="padding:14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
+            <div style="font-size:0.8rem;font-weight:600;margin-bottom:4px;">☁️ Cloud Security</div>
+            <div style="font-size:0.7rem;color:var(--muted);">Multi-cloud expertise</div>
+          </div>
+          <div style="padding:14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
+            <div style="font-size:0.8rem;font-weight:600;margin-bottom:4px;">🔬 Forensics</div>
+            <div style="font-size:0.7rem;color:var(--muted);">Incident investigation</div>
+          </div>
+          <div style="padding:14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
+            <div style="font-size:0.8rem;font-weight:600;margin-bottom:4px;">🏗 Security Architects</div>
+            <div style="font-size:0.7rem;color:var(--muted);">Platform design</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROADMAP -->
+    <div class="page" id="page-roadmap">
+      <div class="page-header">
+        <div class="page-label">Execution</div>
+        <div class="page-title">Strategic Roadmap</div>
+        <div class="page-sub">Phased implementation plan across 4 quarters</div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Timeline</div>
+          <div class="roadmap">
+            <div class="rm-item done">
+              <div class="rm-q">Q1 2025</div>
+              <div class="rm-title">Foundation</div>
+              <div class="rm-sub">R&D team setup, certifications audit, cloud migration plan</div>
+            </div>
+            <div class="rm-item current">
+              <div class="rm-q">Q2 2025 — Now</div>
+              <div class="rm-title">Platform Build</div>
+              <div class="rm-sub">EDR MVP, AI model training, threat intel database init</div>
+            </div>
+            <div class="rm-item">
+              <div class="rm-q">Q3 2025</div>
+              <div class="rm-title">Expansion</div>
+              <div class="rm-sub">SOC launch, North America & Europe office setup, ISO 27001</div>
+            </div>
+            <div class="rm-item">
+              <div class="rm-q">Q4 2025</div>
+              <div class="rm-title">Market Entry</div>
+              <div class="rm-sub">Unified platform GA, pricing model, partnership program</div>
+            </div>
+            <div class="rm-item">
+              <div class="rm-q">Q1–Q2 2026</div>
+              <div class="rm-title">Scale</div>
+              <div class="rm-sub">APAC expansion, XDR launch, enterprise customer acquisition</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Certifications Tracker</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;font-size:0.8rem;">
+              <span>ISO 27001</span><span class="card-title-badge badge-green">✓ Achieved</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;font-size:0.8rem;">
+              <span>SOC 2 Type II</span><span class="card-title-badge badge-warn">In Audit</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;font-size:0.8rem;">
+              <span>PCI DSS</span><span class="card-title-badge badge-purple">Planned</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;font-size:0.8rem;">
+              <span>FedRAMP</span><span class="card-title-badge badge-purple">Planned</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;font-size:0.8rem;">
+              <span>GDPR Compliance</span><span class="card-title-badge badge-warn">In Progress</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="page" id="page-checklist">
+      <div class="page-header">
+        <div class="page-label">Execution</div>
+        <div class="page-title">Action Items</div>
+        <div class="page-sub">Click items to mark as complete</div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="card-title" style="margin-bottom:10px;">Immediate (0–3 months)</div>
+          <div class="checklist" id="checklist-immediate"></div>
+        </div>
+        <div>
+          <div class="card-title" style="margin-bottom:10px;">Short-term (3–6 months)</div>
+          <div class="checklist" id="checklist-short"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRIORITIES -->
+    <div class="page" id="page-priorities">
+      <div class="page-header">
+        <div class="page-label">Strategic Focus</div>
+        <div class="page-title">Priority Rankings</div>
+        <div class="page-sub">Highest-impact initiatives for limited resources</div>
+      </div>
+      <div class="card">
+        <div class="priority-list" id="priority-list"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const strategies = [
+  { num:'01', title:'AI-Driven Security Platform', desc:'Invest in AI/ML, automate threat detection, use predictive analytics, continuously train models on new threat intelligence.', status:'progress' },
+  { num:'02', title:'Unified Cybersecurity Platform', desc:'Build a single cloud platform covering EDR, XDR, Identity, Cloud Security, Email, Vuln Management, Threat Intel & Log Management.', status:'progress' },
+  { num:'03', title:'Global Threat Intelligence', desc:'Build a global threat intelligence team, collect worldwide data, share intelligence across clients, and maintain an IOC database.', status:'progress' },
+  { num:'04', title:'Cloud-Native Architecture', desc:'Move away from legacy on-premise software. Develop cloud-native, multi-cloud security solutions and secure cloud workloads.', status:'progress' },
+  { num:'05', title:'International Presence', desc:'Open offices in North America, Europe, Middle East & APAC. Hire local teams, multilingual support, regional distributors.', status:'planned' },
+  { num:'06', title:'R&D Investment', desc:'Establish malware research labs, develop zero-day detection, research AI security, quantum-safe cryptography, and IoT security.', status:'progress' },
+  { num:'07', title:'Security Operations Center', desc:'Provide 24/7 monitoring, Managed Detection & Response (MDR), digital forensics, incident response, and threat hunting.', status:'planned' },
+  { num:'08', title:'Security Certifications', desc:'Obtain ISO 27001, SOC 2 Type II, PCI DSS, FedRAMP, and regional compliance certifications (GDPR etc.) to build trust.', status:'progress' },
+  { num:'09', title:'Customer Success', desc:'Dedicated account managers, technical support, security training, incident response, and online learning resources.', status:'progress' },
+  { num:'10', title:'Competitive Pricing', desc:'Flexible subscriptions, monthly/annual billing, free trials, SME discounts, and enterprise pricing packages.', status:'progress' },
+  { num:'11', title:'Brand Building', desc:'Publish research reports, speak at conferences, maintain social media, host webinars, contribute to open-source projects.', status:'planned' },
+  { num:'12', title:'Ecosystem & Integrations', desc:'Integrate with major cloud providers, SIEM, identity providers, ITSM tools, and DevOps/CI-CD platforms via open APIs.', status:'planned' },
+  { num:'13', title:'Customer Experience', desc:'Clean intuitive dashboard, one-click deployment, automated reporting, threat visualizations, mobile access, easy onboarding.', status:'progress' },
+  { num:'14', title:'Managed Security Services', desc:'Offer MDR, threat hunting, IR retainers, vulnerability assessments, penetration testing, security awareness training.', status:'planned' },
+  { num:'15', title:'Skilled Talent', desc:'Hire malware analysts, reverse engineers, threat hunters, AI/ML engineers, cloud security and digital forensics experts.', status:'progress' },
+  { num:'16', title:'Innovation Leadership', desc:'Develop AI autonomous response, behavioral analytics, Zero Trust, identity threat detection, container/K8s security, quantum-resistant research.', status:'planned' },
+];
+
+const compareData = [
+  { area:'AI', cs:'Advanced AI detection', hz:'Invest heavily in AI/ML and automation', gap:'High' },
+  { area:'Platform', cs:'Unified cloud-native platform', hz:'Build integrated security platform', gap:'High' },
+  { area:'Threat Intel', cs:'Global telemetry and research', hz:'Expand global intelligence collection', gap:'High' },
+  { area:'Cloud Security', cs:'Mature cloud protection', hz:'Develop cloud-native security services', gap:'Med' },
+  { area:'Brand', cs:'Strong global recognition', hz:'Increase marketing & thought leadership', gap:'Med' },
+  { area:'R&D', cs:'Continuous innovation', hz:'Increase research investment', gap:'High' },
+  { area:'SOC', cs:'Global 24/7 operations', hz:'Build managed SOC capabilities', gap:'High' },
+  { area:'Support', cs:'Strong customer success', hz:'Enhance support and training', gap:'Low' },
+  { area:'Integrations', cs:'Extensive ecosystem', hz:'Expand APIs & third-party integrations', gap:'Med' },
+  { area:'Global Reach', cs:'Worldwide customer base', hz:'Expand internationally with local support', gap:'High' },
+];
+
+const aiChecklist = [
+  'Hire ML/AI security engineers (min. 5 headcount)',
+  'Evaluate and select AI/ML frameworks (PyTorch, TensorFlow)',
+  'Collect and label historical threat data for model training',
+  'Build automated threat detection pipeline (MVP)',
+  'Implement predictive analytics for attack forecasting',
+  'Integrate AI models into detection workflow',
+  'Establish model retraining schedule (monthly)',
+];
+
+const immediateItems = [
+  'Audit current technology stack vs. required capabilities',
+  'Define platform architecture and tech roadmap',
+  'Initiate ISO 27001 certification process',
+  'Hire first wave of AI/ML engineers',
+  'Set up cloud infrastructure (AWS/Azure/GCP)',
+  'Define competitive pricing tiers and models',
+];
+
+const shortItems = [
+  'Launch EDR product MVP with 50 beta customers',
+  'Complete SOC 2 Type II audit',
+  'Open North America regional office',
+  'Publish first quarterly Threat Intelligence Report',
+  'Integrate with top 3 SIEM platforms',
+  'Launch customer success program',
+];
+
+const priorities = [
+  { rank:'P1', title:'Cloud-native AI-powered cybersecurity platform', sub:'Foundation for all other capabilities — must be built first', impact:'High' },
+  { rank:'P2', title:'Threat intelligence & managed detection/response', sub:'Core differentiator; enables recurring managed services revenue', impact:'High' },
+  { rank:'P3', title:'Enterprise tool integrations & open APIs', sub:'Reduces adoption friction; expands addressable market significantly', impact:'High' },
+  { rank:'P4', title:'R&D investment and cybersecurity talent pipeline', sub:'Sustains long-term innovation and competitive differentiation', impact:'High' },
+  { rank:'P5', title:'International expansion via partnerships', sub:'Multiplies reach without full cost of organic expansion', impact:'Med' },
+];
+
+// Render strategies
+const grid = document.getElementById('strategy-grid');
+strategies.forEach(s => {
+  const dotClass = s.status === 'progress' ? 'dot-progress' : 'dot-planned';
+  grid.innerHTML += `
+    <div class="strategy-card">
+      <div class="status-dot ${dotClass}"></div>
+      <div class="num">${s.num}</div>
+      <h3>${s.title}</h3>
+      <p>${s.desc}</p>
+    </div>
+  `;
+});
+
+// Render compare table
+const tbody = document.getElementById('compare-tbody');
+compareData.forEach(r => {
+  const color = r.gap === 'High' ? 'var(--danger)' : r.gap === 'Med' ? 'var(--warn)' : 'var(--accent3)';
+  tbody.innerHTML += `
+    <tr>
+      <td><span class="area-pill">${r.area}</span></td>
+      <td class="cs-cell">${r.cs}</td>
+      <td class="hz-cell">${r.hz}</td>
+      <td><span style="color:${color};font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:600;">${r.gap}</span></td>
+    </tr>
+  `;
+});
+
+// Render AI checklist
+const aiCl = document.getElementById('ai-checklist');
+aiChecklist.forEach((item, i) => {
+  aiCl.innerHTML += `
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <span>${item}</span>
+    </div>
+  `;
+});
+
+// Render checklists
+function renderChecklist(id, items) {
+  const el = document.getElementById(id);
+  items.forEach(item => {
+    el.innerHTML += `
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <span>${item}</span>
+      </div>
+    `;
+  });
+}
+renderChecklist('checklist-immediate', immediateItems);
+renderChecklist('checklist-short', shortItems);
+
+// Render priorities
+const pl = document.getElementById('priority-list');
+priorities.forEach(p => {
+  const cls = p.impact === 'High' ? 'impact-high' : 'impact-med';
+  pl.innerHTML += `
+    <div class="priority-item">
+      <div class="priority-rank">${p.rank}</div>
+      <div class="priority-info">
+        <div class="priority-title">${p.title}</div>
+        <div class="priority-sub">${p.sub}</div>
+      </div>
+      <span class="priority-impact ${cls}">${p.impact} Impact</span>
+    </div>
+  `;
+});
+
+// Navigation
+function navigate(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  el.classList.add('active');
+}
+
+function switchTab(btn, pane) {
+  btn.closest('.tab-bar').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const id = btn.closest('.page').querySelectorAll('.tab-pane');
+  id.forEach(p => p.classList.remove('active'));
+  document.getElementById(pane).classList.add('active');
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('done');
+  el.querySelector('.check-box').textContent = el.classList.contains('done') ? '✓' : '';
+}
+</script>
+</body>
+</html>
