@@ -8,7 +8,7 @@
 
 # Hi, I'm Rayyan Asim 👋
 
-<img src="https://readme-typing-svg.demolab.com/?lines=AI-Powered+Business+Intelligence;Data+Analytics+%26+Decision+Intelligence;AI+Automation+%7C+n8n+%7C+LLM+Workflows;Turning+Data+Into+Decisions;&font=Fira%20Code&center=true&width=700&height=45&color=2C5364&vCenter=true&size=22" />
+<img src="https://readme-typing-svg.demolab.com/?lines=AI-Powered+Business+Intelligence;Data+Analytics+%26+Decision+Intelligence;AI+Automation+%7C+n8n+Workflows+%7C+LLMs;Turning+Data+Into+Decisions;&font=Fira%20Code&center=true&width=700&height=45&color=2C5364&vCenter=true&size=22" />
 
 Transforming business data into intelligent decisions through **Business Intelligence, Analytics, Automation,** and **Artificial Intelligence.**
 
