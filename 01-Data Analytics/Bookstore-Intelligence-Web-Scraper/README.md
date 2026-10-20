@@ -70,7 +70,7 @@ Inspect HTML  →  Extract Data  →  Scrape Pages  →  Structure with Pandas
 
 <div align="center">
 
-![Distribution of Book Ratings](book_rating_distribution(1).png)
+![Distribution of Book Ratings](book_rating_distribution%20(1).png)
 
 *Distribution of star ratings across the 1,000-book full catalogue.*
 
